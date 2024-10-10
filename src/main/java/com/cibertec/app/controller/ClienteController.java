@@ -28,6 +28,7 @@ public class ClienteController {
 	    // este objeto Cliente almacenara los valores 
 	  	Cliente cliente = new Cliente();
 	    model.addAttribute("cliente", cliente);
+	    
 	    return "cliente/create";
 	}
 		

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.cibertec.app.entity.Cliente;
 import com.cibertec.app.entity.Producto;
+import com.cibertec.app.service.CategoriaService;
 import com.cibertec.app.service.ProductoService;
 
 
@@ -18,11 +19,14 @@ import com.cibertec.app.service.ProductoService;
 public class ProductoController {
 
 	@Autowired
-	private ProductoService service;
+	private ProductoService productoService;
+	
+	@Autowired
+	private CategoriaService categoriaService;
 	
 	@GetMapping("/producto")
 	public String listProductos(Model model) {
-	    model.addAttribute("productos", service.getAllProducto());
+	    model.addAttribute("productos", productoService.getAllProducto());
 	    return "producto/index";
 	}  
 	
@@ -31,19 +35,22 @@ public class ProductoController {
 	     
 	  	Producto producto = new Producto();
 	    model.addAttribute("producto", producto);
+	    model.addAttribute("categoriaList", categoriaService.getAllCategoria());
 	    return "producto/create";
 	}
+	
 		
 	@PostMapping("/producto")
 	public String saveProducto(@ModelAttribute("producto") Producto producto) {
-	    service.saveProducto(producto);
+		productoService.saveProducto(producto);
 	    return "redirect:/producto";
 	}
 	
 	@GetMapping("/producto/edit/{id}")
 	public String editProductoForm(@PathVariable Integer id, Model model) {
-	    Producto st = service.findProductoById(id);
+	    Producto st = productoService.findProductoById(id);
 	    model.addAttribute("producto", st);
+	    model.addAttribute("categoriaList", categoriaService.getAllCategoria());
 	    return "producto/edit";
 	}
 	
@@ -51,7 +58,7 @@ public class ProductoController {
 	public String updateProducto(@PathVariable Integer id, 
 	    @ModelAttribute("producto") Producto producto, Model model) {
 	    //sacar el producto de la b.d. por el id
-	    Producto existentProducto = service.findProductoById(id);
+	    Producto existentProducto = productoService.findProductoById(id);
 	    // cargarlo
 	    existentProducto.setIdProd(id);
 	    existentProducto.setDescripcion(producto.getDescripcion());
@@ -59,13 +66,13 @@ public class ProductoController {
 	    existentProducto.setStock(producto.getStock());
 	    existentProducto.setCategoria(producto.getCategoria());
 	    // guardar el producto actualizado
-	    service.updateProducto(existentProducto);
+	    productoService.updateProducto(existentProducto);
 	    return "redirect:/producto";
 	}
 	
 	@GetMapping("/producto/{id}")
 	public String deleteProducto(@PathVariable Integer id) {
-	    service.deleteProductoById(id);
+		productoService.deleteProductoById(id);
 	    return "redirect:/producto";
 	}
 }

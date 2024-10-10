@@ -15,4 +15,5 @@ public interface ProductoService {
 	public void deleteProductoById(Integer idProd);
 	
 	public Producto findProductoById(Integer idProd);
+	
 }
